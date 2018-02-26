@@ -4,10 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var fs = require('fs');
-
 var index = require('./routes/index');
 var users = require('./routes/users');
+//var AsyncLock = require('async-lock');
+var fs = require('fs');
+//var lock = new AsyncLock();
+
 var jsonMessage = 'No Data';
 var image;
 var rawJsonData;
@@ -29,11 +31,11 @@ app.use('/', index);
 app.use('/users', users);
 
 app.get('/image', function(req, res) {
-    console.log('ahhhhhh!!!!!');
+    console.log('Image sent!!!!!');
     res.send(image);
   });
 app.get('/arduino', function(req, res) {
-    console.log('ahhhhhh!!!!!');
+    console.log('arduino data sent!!!!!');
     res.send(rawJsonData);
 });
 
@@ -73,18 +75,19 @@ server.on('error',function(error){
 server.on('message',function(msg,info){
   //console.log('Data received from client : ' + msg.toString());
   console.log('Received %d bytes from %s:%d\n',msg.length, info.address, info.port);
-  jsonMessage = msg;
+  jsonMessage = JSON.parse(msg);
   
-  if(jsonMessage.type == 'Image') {
-      
+  if(jsonMessage.Type === 'Image') {
+    console.log("accessed!");
+      image = jsonMessage.Bitmap;
+      fs.writeFile('mynewfile3.jpeg', image, function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+      });
   }
   else if(jsonMessage.type == 'Arduino') {
-
+      rawJsonData = jsonMessage;
   }
-
-  fs.writeFile('image.jpeg', jsonMessage, function(err) {
-    if(err) throw err;
-  });
 });
 
 //emits when socket is ready and listening for datagram msgs
