@@ -15,11 +15,14 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
           method: 'GET',
           url: '/arduino'
        }).then(function (success){
+         console.log(success.data);
           var jsonData =  success.data;
+          console.log('json', jsonData);
+
           var m = $scope.data;
           m.shift();
-          var k = jsonData.sound;
-          $scope.tilt = jsonData.tilt ? 'Tilted' : 'Not tilted';
+          var k = jsonData.Sound;
+          $scope.tilt = jsonData.Tilt ? 'Tilted' : 'Not tilted';
           // field (expected): type, ID, sound, light, tilt
           console.log('sound value', k)
           m.push(k);

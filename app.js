@@ -35,7 +35,7 @@ app.get('/image', function(req, res) {
     res.send(image);
   });
 app.get('/arduino', function(req, res) {
-    console.log('arduino data sent!!!!!');
+    console.log('arduino data sent!!!!!', rawJsonData);
     res.send(rawJsonData);
 });
 
@@ -73,20 +73,27 @@ server.on('error',function(error){
 
 // emits on new datagram msg
 server.on('message',function(msg,info){
-  //console.log('Data received from client : ' + msg.toString());
+ 
   console.log('Received %d bytes from %s:%d\n',msg.length, info.address, info.port);
+ 
+
+  console.log(msg);
   jsonMessage = JSON.parse(msg);
-  
+
   if(jsonMessage.Type === 'Image') {
     console.log("accessed!");
-      image = jsonMessage.Bitmap;
-      fs.writeFile('mynewfile3.jpeg', image, function (err) {
+      image64 = jsonMessage.Bitmap;
+      var imageBuffer = Buffer.from(image64, 'base64')
+      fs.writeFile('mynewfile3.jpeg', imageBuffer, function (err) {
         if (err) throw err;
         console.log('Saved!');
       });
   }
-  else if(jsonMessage.type == 'Arduino') {
-      rawJsonData = jsonMessage;
+  else if(jsonMessage.Type === 'Arduino') {
+    console.log(jsonMessage);
+
+    rawJsonData = jsonMessage;
+    console.log('initial', rawJsonData)
   }
 });
 
