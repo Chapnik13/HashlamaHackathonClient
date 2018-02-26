@@ -8,7 +8,7 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
     };
     $scope.currentTime = new Date().toLocaleTimeString();
     $scope.tilt = '0';
-      $interval(function () {
+    $interval(function () {
         //data.
         $scope.currentTime = new Date().toLocaleTimeString();
         $http({
@@ -24,9 +24,20 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
           var k = jsonData.Sound;
           $scope.tilt = jsonData.Tilt ? 'Tilted' : 'Not tilted';
           // field (expected): type, ID, sound, light, tilt
-          console.log('sound value', k)
+          // console.log('sound value', k)
           m.push(k);
           $scope.data = m;
+       }, function (error){
+       });
+    }, 150);
+
+    $interval(function () {
+       $http({
+          method: 'GET',
+          url: '/image'
+       }).then(function (success){
+          var jsonData =  success.data;
+          $scope.image = jsonData.Bitmap;
        }, function (error){
        });
     }, 200);
