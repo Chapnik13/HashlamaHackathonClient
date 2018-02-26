@@ -7,20 +7,24 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
       console.log(points, evt);
     };
     $scope.currentTime = new Date().toLocaleTimeString();
-    $scope.temp = 0;
+    $scope.tilt = '0';
       $interval(function () {
         //data.
         $scope.currentTime = new Date().toLocaleTimeString();
-        var m = $scope.data;
-        m.shift();
-        m.push(Math.random()*100);
-        $scope.data = m;
         $http({
           method: 'GET',
-          url: '/weather'
+          url: '/arduino'
        }).then(function (success){
-        $scope.temp = success.data;    
-       },function (error){
+          var jsonData =  success.data;
+          var m = $scope.data;
+          m.shift();
+          var k = jsonData.sound;
+          $scope.tilt = jsonData.tilt ? 'Tilted' : 'Not tilted';
+          // field (expected): type, ID, sound, light, tilt
+          console.log('sound value', k)
+          m.push(k);
+          $scope.data = m;
+       }, function (error){
        });
     }, 200);
     
@@ -39,6 +43,3 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
       }
     };
   });
-
- myApp.controller("Temperature", function($scope, $http) {
- });
