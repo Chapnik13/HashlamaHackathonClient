@@ -27,6 +27,17 @@
             </div>
         </nav>
         <div class="container" ng-controller="dashboardCtrl" ng-app="dashboard">
+            <div class="row">
+                <div class="col input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="inputGroupSelect01">Select input</label>
+                    </div>
+                    <select class="custom-select" id="inputGroupSelect01"
+                        ng-options="option.name for option in inputIDs.availableOptions track by option.id"
+                        ng-model="inputIDs.selectedOption">
+                    </select>
+                  </div>
+                </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="card">
@@ -38,10 +49,11 @@
                         </div>
                     </div>
                     <div class="col-md-4">
+                       
                         <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title"><span class="oi oi-eye"></span>IR sensor</h4>
-                            <h1 class="card-title"><span class="oi oi-check"></span>As usual.</h1>
+                            <h4 class="card-title"><span class="oi oi-sun"></span>Light sensor</h4>
+                            <h1 class="card-title">{{light}}</h1>
                         </div>
                         </div>
                     </div>
