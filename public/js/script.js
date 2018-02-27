@@ -4,14 +4,9 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
     $scope.series = ['Series A'];
     $scope.data = new Array(50);
     $scope.onClick = function (points, evt) {
-      console.log(points, evt);
+      //console.log(points, evt);
     };
 
-    $scope.functions = {
-      blt: (a, b) => {return a < b}, // less than
-      bgt: (a, b) => {return a > b}, // greater than
-      beq: (a, b) => {return a == b} // equals
-    }
 
     $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }];
     $scope.options = {
@@ -37,8 +32,32 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
 
       // name: display name, comF: lamda function, type: relevant parameter
     $scope.rules = [
-      {name: 'Light',  comF: (arg) => {$scope.functions.blt(arg, 300)}, type: 1, desc: 'Alert if light < 300'}
     ];
+
+    
+    $scope.newRule = {
+      name: '',
+      inputTrack: 'Tilt',
+      op: '1',
+      val: 11,
+    };
+    
+    $scope.addRule = function(){
+      console.log('Adding Rule', $scope.newRule);
+      var vl = $scope.newRule.val;
+      var fm = (arg) => {return arg < vl};
+      if($scope.newRule.op == '2'){
+         fm = (arg) => {return arg > vl};
+      } else if($scope.newRule.op == '3'){
+        fm = (arg) => {return arg == vl};
+      }
+            
+      $scope.rules.push({ 
+        name: $scope.newRule.name,
+        inputTrack: $scope.newRule.inputTrack,
+        comF: fm,        
+      });            
+    };
 
       $http({
         method: 'GET',
@@ -51,7 +70,7 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
         }
       }, function (error){
       });
-
+      
     
     
    //$scope.inputIDs = [];
@@ -70,18 +89,25 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
           // console.log(success.data);
           var jsonData =  success.data;
           if(jsonData != null && !angular.equals({}, jsonData)){
-            console.log('json', jsonData);
-            console.log('data', success.data);
+            //console.log('json', jsonData);
+            //console.log('data', success.data);
 
             var m = $scope.data;
             m.shift();
             var k = jsonData.Sound;
             $scope.tilt = jsonData.Tilt ? 'Tilted' : 'Not tilted';
-            $scope.light = jsonData.Light != null ? (1024 - jsonData.Light) : 0;
+            jsonData.Light *= -1;
+            jsonData.Light += 1024;
 
-            if($scope.light > 400 && $scope.numHumans >= 1){
-              alert("Humans detected!")
-            }
+            $scope.light = jsonData.Light != null ? jsonData.Light : 0;
+
+            angular.forEach($scope.rules, function(rule) {
+              //console.log('rule is', rule);
+              if (rule.comF(jsonData[rule.inputTrack])) {
+                alert(rule.name + ' was evoked.');
+              }
+            });
+
             // field (expected): type, ID, sound, light, tilt
             // console.log('sound value', k)
             m.push(k);

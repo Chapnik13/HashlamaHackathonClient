@@ -21,7 +21,7 @@
                         <a class="nav-link" href="index.html">Control <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="rules.html">Rules</a>
+                        <a class="nav-link" href="rules.html">About</a>
                     </li>
                 </ul>
             </div>
@@ -87,23 +87,70 @@
                     </div>
                 </div>
                 <div class="row mt-3">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div  class="card-body">
+                                    <h4 class="card-title"><span class="oi oi-arrow-circle-top"></span>Add a rule</h4>
+                                    <form>
+                                        <h5 class="mb-3">Name this rule:</h5>
+                                            <input type="text" name="input" ng-model="newRule.name" ng-pattern="example.word" required ng-trim="false" class="mb-3">
+                                              
+                                        <h5 class="mb-3">Select an input:</h5>
+                                        <div class="d-block my-3">
+                                                <label>
+                                                    <input value="Tilt" ng-model="newRule.inputTrack" type="radio">
+                                                    Tilt
+                                                </label></br>
+                                                <label>
+                                                    <input value="Light" ng-model="newRule.inputTrack" type="radio">
+                                                    Light
+                                                </label></br>
+                                                <label>
+                                                    <input value="Sound" ng-model="newRule.inputTrack" type="radio">
+                                                    Sound
+                                                </label></br>
+                                        </div>
+                                        <h5 class="mb-3">Choose an operation:</h5>
+                                        <div class="d-block my-3">
+                                            <label>
+                                                <input value="1" ng-model="newRule.op" type="radio">
+                                                BLT (input is less than)
+                                            </label></br>
+                                            <label>
+                                                <input value="2" ng-model="newRule.op" type="radio">
+                                                BGT (input is greater than)
+                                            </label></br>
+                                            <label>
+                                                <input value="3" ng-model="newRule.op" type="radio">
+                                                BEQ (input is equal to)
+                                            </label></br>
+                                        </div>
+                                        
+                                        <h5 class="mb-3">Choose a number to compare to:</h5>
+                                            <input type="number" name="input" ng-model="newRule.val" min="0" max="1024" required class="mb-3">     
+                                        <hr class="mb-3">
+                                        
+
+                                        <button ng-click="addRule()"  class="btn btn-primary btn-block" type="submit">Add!</button>
+                                    </form>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                        
                         <div class="col-md-4">
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                  <span>Rules ({{rules.length}})</span>
-                                  <button type="button" class="btn btn-primary btn-sm">Add rules</button>
-                                </h4>
+                                  <span>Rules</span>
+                                  <span class="badge badge-secondary badge-pill">{{rules.length}}</span>                                </h4>
                                 <ul class="list-group mb-3">
                                   <li ng-repeat="rule in rules" class="list-group-item d-flex">
                                     <div>
                                       <h6 class="my-0">{{rule.name}}</h6>
-                                      <small class="text-muted">{{rule.desc}}</small>
                                     </div>
                                   </li>
                                 </ul>
-                        </div>
-                        <div class="col-md-8">
-                            <h4>Add</h4>
-
                         </div>
                 </div>
         </div>
