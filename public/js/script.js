@@ -1,11 +1,17 @@
 var myApp = angular.module("dashboard", ["chart.js"])
 myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
-    $scope.labels =  new Array(45);
+    $scope.labels =  new Array(50);
     $scope.series = ['Series A'];
-    $scope.data = new Array(45);
+    $scope.data = new Array(50);
     $scope.onClick = function (points, evt) {
       console.log(points, evt);
     };
+
+    $scope.functions = {
+      blt: (a, b) => {return a < b}, // less than
+      bgt: (a, b) => {return a > b}, // greater than
+      beq: (a, b) => {return a == b} // equals
+    }
 
     $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }];
     $scope.options = {
@@ -25,10 +31,14 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
       availableOptions: [
         {id: '1', name: 'Option A'},
         {id: '2', name: 'Option B'},
-        {id: '3', name: 'Option C'}
       ],
-      selectedOption: {id: '3', name: 'Option C'} //This sets the default value of the select in the ui
+      selectedOption: {id: '2', name: 'Option B'} //This sets the default value of the select in the ui
       };
+
+      // name: display name, comF: lamda function, type: relevant parameter
+    $scope.rules = [
+      {name: 'Light',  comF: (arg) => {$scope.functions.blt(arg, 300)}, type: 1, desc: 'Alert if light < 300'}
+    ];
 
       $http({
         method: 'GET',
@@ -67,7 +77,11 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
             m.shift();
             var k = jsonData.Sound;
             $scope.tilt = jsonData.Tilt ? 'Tilted' : 'Not tilted';
-            $scope.light = jsonData.Light != null ? jsonData.Light : 0;
+            $scope.light = jsonData.Light != null ? (1024 - jsonData.Light) : 0;
+
+            if($scope.light > 400 && $scope.numHumans >= 1){
+              alert("Humans detected!")
+            }
             // field (expected): type, ID, sound, light, tilt
             // console.log('sound value', k)
             m.push(k);
@@ -88,6 +102,7 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
           //console.log('image json', jsonData);
           $scope.image = jsonData.Image;
           var det = jsonData.Detection;
+          $scope.numHumans = det;
           $scope.humanDetected = det == 0 ? 'No Humans Detected.' : det + ' humans detected.';
        }, function (error){
        });
