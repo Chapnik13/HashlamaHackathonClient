@@ -15,9 +15,9 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
           method: 'GET',
           url: '/arduino'
        }).then(function (success){
-         console.log(success.data);
+          // console.log(success.data);
           var jsonData =  success.data;
-          console.log('json', jsonData);
+          //console.log('json', jsonData);
 
           var m = $scope.data;
           m.shift();
@@ -37,7 +37,8 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
           url: '/image'
        }).then(function (success){
           var jsonData =  success.data;
-          $scope.image = jsonData.Bitmap;
+          console.log('image json', jsonData);
+          $scope.image = jsonData;
        }, function (error){
        });
     }, 200);

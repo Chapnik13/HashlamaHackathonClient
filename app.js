@@ -79,21 +79,22 @@ server.on('message',function(msg,info){
 
   console.log(msg);
   jsonMessage = JSON.parse(msg);
+  console.log(jsonMessage);
 
   if(jsonMessage.Type === 'Image') {
     console.log("accessed!");
       image64 = jsonMessage.Bitmap;
-      var imageBuffer = Buffer.from(image64, 'base64')
+      var imageBuffer = Buffer.from(image64, 'base64');
       fs.writeFile('mynewfile3.jpeg', imageBuffer, function (err) {
         if (err) throw err;
         console.log('Saved!');
       });
+      image= image64;
   }
   else if(jsonMessage.Type === 'Arduino') {
-    console.log(jsonMessage);
 
     rawJsonData = jsonMessage;
-    console.log('initial', rawJsonData)
+    //console.log('initial', rawJsonData)
   }
 });
 
