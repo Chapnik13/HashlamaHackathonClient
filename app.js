@@ -115,13 +115,18 @@ server.on('message',function(msg,info){
     console.log("accessed!");
       imageAddr = '/image' + jsonMessage.Id;
       image64 = jsonMessage.Bitmap;
+      detectedBoolean = jsonMessage.HumanDetected;
       // var imageBuffer = Buffer.from(image64, 'base64');
       // fs.writeFile('mynewfile3.jpeg', imageBuffer, function (err) {
       //   if (err) throw err;
       //   console.log('Saved!');
       // });
+
       image= image64;
-      blackBoxesImageDict[jsonMessage.Id] = image64;
+      blackBoxesImageDict[jsonMessage.Id] = {
+        Image : image64,
+        Detection : detectedBoolean 
+      };
   }
   else if(jsonMessage.Type === 'Arduino') {
     ardunioAddr = '/arduino' + jsonMessage.Id;

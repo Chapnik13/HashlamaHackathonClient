@@ -86,7 +86,9 @@ myApp.controller("dashboardCtrl", function ($scope, $interval, $http) {
        }).then(function (success){
           var jsonData =  success.data;
           //console.log('image json', jsonData);
-          $scope.image = jsonData;
+          $scope.image = jsonData.Image;
+          var det = jsonData.Detection;
+          $scope.humanDetected = det == 0 ? 'No Humans Detected.' : det + ' humans detected.';
        }, function (error){
        });
     }, 200);
